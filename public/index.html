@@ -14,6 +14,45 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="PromptPal">
+    <!-- ✅ SEO: Open Graph / Twitter meta -->
+    <meta property="og:title" content="PromptPal - AI Prompt Testing Platform">
+    <meta property="og:description" content="Test and manage AI prompts with real-time scoring.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/icons/icon-512.png">
+    <meta property="og:url" content="https://yourdomain.com">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PromptPal">
+    <meta name="twitter:description" content="Test and manage AI prompts with real-time scoring.">
+    <meta name="twitter:image" content="/icons/icon-512.png">
+
+    <!-- ✅ PWA Enhancement -->
+    <link rel="apple-touch-startup-image" href="/icons/splash-640x1136.png">
+    <link rel="mask-icon" href="/icons/icon.svg" color="#4CAF50">
+
+    <!-- ✅ Google Analytics Example -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXX');
+    </script>
+
+    <!-- ✅ Dark Mode Support -->
+    <style>
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #222 0%, #444 100%);
+                color: #ddd;
+            }
+            .tab-content, .header{
+                background: #333;
+                color: #ddd;
+            }
+        }
+    </style>
+    
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -124,6 +163,7 @@
         }
     </style>
   </head>
+  
   <body>
       <div class="container">
           <div style="text-align: center; margin-bottom: 20px;">
@@ -276,6 +316,10 @@ Use {variables} like:
                 • No data is sent to our servers<br>
                 • Direct connection to AI providers<br>
                 • You maintain full control of your data
+                <br>
+                <p style="margin-top:10px; font-size:13px; color:#666;">
+                    We may use anonymous usage analytics to improve features. No personal data is sent.
+                </p>
             </div>
 
             <div class="alert alert-warning">
@@ -626,40 +670,29 @@ Use {variables} like:
                 completeness: 0
             };
 
-            // 1. 内容质量评分 (基于长度、语法、连贯性)
             scores.quality = evaluateQuality(response);
 
-            // 2. 相关性评分 (是否回答了问题)
             scores.relevance = evaluateRelevance(response, prompt, inputData);
 
-            // 3. 长度合规性评分
             scores.length = evaluateLengthCompliance(response, inputData);
 
-            // 4. 结构评分 (段落、标点、格式)
             scores.structure = evaluateStructure(response);
 
-            // 5. 创意性评分
             scores.creativity = evaluateCreativity(response);
 
-            // 6. 完整性评分
             scores.completeness = evaluateCompleteness(response, prompt);
 
-            // 显示分数
             displayScores(scores);
         }
 
         function evaluateQuality(response) {
-            let score = 70; // 基础分
-
-            // 长度检查
+            let score = 70; 
             if (response.length > 100) score += 10;
             if (response.length > 300) score += 5;
 
-            // 语法和连贯性 (简单检查)
             const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 0);
             if (sentences.length >= 3) score += 10;
 
-            // 词汇丰富度
             const words = response.toLowerCase().split(/\s+/);
             const uniqueWords = new Set(words);
             const diversity = uniqueWords.size / words.length;
@@ -671,7 +704,6 @@ Use {variables} like:
         function evaluateRelevance(response, prompt, inputData) {
             let score = 60; // 基础分
 
-            // 检查是否包含输入的关键词
             const variables = extractVariables(inputData);
             let keywordMatches = 0;
 
@@ -696,7 +728,7 @@ Use {variables} like:
             const variables = extractVariables(inputData);
             const requestedLength = variables.length;
 
-            if (!requestedLength) return 85; // 没有指定长度要求
+            if (!requestedLength) return 85; 
 
             const actualLength = response.split(/\s+/).length;
             const targetLength = parseInt(requestedLength);
@@ -705,26 +737,22 @@ Use {variables} like:
 
             const ratio = actualLength / targetLength;
 
-            if (ratio >= 0.8 && ratio <= 1.2) return 100; // 完美匹配
-            if (ratio >= 0.6 && ratio <= 1.5) return 85;  // 不错
-            if (ratio >= 0.4 && ratio <= 2.0) return 70;  // 一般
-            return 50; // 差距较大
+            if (ratio >= 0.8 && ratio <= 1.2) return 100; 
+            if (ratio >= 0.6 && ratio <= 1.5) return 85;  
+            if (ratio >= 0.4 && ratio <= 2.0) return 70;  
+            return 50; 
         }
 
         function evaluateStructure(response) {
             let score = 60;
 
-            // 段落结构
             const paragraphs = response.split('\n\n').filter(p => p.trim().length > 0);
             if (paragraphs.length > 1) score += 15;
 
-            // 标点使用
             if (response.match(/[.!?]/g)) score += 10;
 
-            // 列表或结构化内容
             if (response.match(/[-•*]\s|^\d+\./gm)) score += 10;
 
-            // 适当的句子长度
             const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 0);
             const avgSentenceLength = sentences.reduce((sum, s) => sum + s.split(' ').length, 0) / sentences.length;
             if (avgSentenceLength > 8 && avgSentenceLength < 25) score += 5;
@@ -735,15 +763,15 @@ Use {variables} like:
         function evaluateCreativity(response) {
             let score = 70;
 
-            // 使用比喻或例子
+    
             if (response.match(/like|such as|for example|比如|例如/gi)) score += 10;
 
-            // 词汇多样性
+
             const words = response.toLowerCase().split(/\s+/);
             const uniqueWords = new Set(words);
             if (uniqueWords.size / words.length > 0.75) score += 10;
 
-            // 避免重复短语
+          
             const phrases = response.match(/\b\w+\s+\w+\b/g) || [];
             const uniquePhrases = new Set(phrases);
             if (uniquePhrases.size / phrases.length > 0.9) score += 10;
@@ -754,13 +782,12 @@ Use {variables} like:
         function evaluateCompleteness(response, prompt) {
             let score = 70;
 
-            // 检查是否回答了主要问题
+
             if (response.length > 200) score += 15;
 
-            // 检查是否有结论或总结
             if (response.toLowerCase().match(/conclusion|summary|总结|总之|综上/)) score += 10;
 
-            // 检查是否提供了具体信息而不只是泛泛而谈
+
             if (response.match(/\d+|specific|detailed|具体|详细/gi)) score += 5;
 
             return Math.min(100, score);
@@ -790,14 +817,13 @@ Use {variables} like:
                 completenessScore: scores.completeness
             };
 
-            // 显示各项分数
             Object.entries(scoreElements).forEach(([elementId, score]) => {
                 const element = document.getElementById(elementId);
                 element.textContent = score;
                 element.className = `score-value ${getScoreClass(score)}`;
             });
 
-            // 计算总分
+     
             const overallScore = Math.round(Object.values(scores).reduce((sum, score) => sum + score, 0) / 6);
             const overallElement = document.getElementById('overallScore');
             overallElement.textContent = overallScore;
@@ -880,8 +906,11 @@ Use {variables} like:
             setTimeout(() => validateApiKeys(), 5000);
         }
     </script>
+  </div> <!-- .container -->
+
+  <footer style="text-align:center; padding:20px; font-size:13px; color:#888;">
+    © 2025 PromptPal. All rights reserved.
+  </footer>
 </body>
 </html>
-    </script>
-</body>
-</html>
+

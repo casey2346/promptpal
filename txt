@@ -1,0 +1,65 @@
+promptpal/
+├── README.md
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── .gitignore
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   ├── privacy.html
+│   └── icons/
+│       ├── icon-192.png
+│       └── icon-512.png
+        
+├── icon-72.png
+├── icon-96.png
+├── icon-128.png
+├── icon-144.png
+├── icon-152.png
+├── icon-192.png
+├── icon-384.png
+└── icon-512.png
+
+├── src/
+│   ├── main.ts
+│   ├── app.ts
+│   ├── api/
+│   │   ├── openai.ts
+│   │   ├── claude.ts
+│   │   └── gemini.ts
+│   ├── storage/
+│   │   ├── prompts.ts
+│   │   └── settings.ts
+│   ├── scoring/
+│   │   ├── score.ts
+│   │   └── evaluate.ts
+│   ├── ui/
+│   │   ├── editor.ts
+│   │   ├── testlab.ts
+│   │   └── settings.ts
+│   ├── charts/
+│   │   └── scoringChart.ts
+│   └── styles/
+│       └── main.css
+├── static/
+│   └── sw.js
+├── server/ (可选后端)
+│   ├── index.ts
+│   ├── routes/
+│   │   ├── auth.ts
+│   │   ├── keys.ts
+│   │   └── logs.ts
+│   └── models/
+│       ├── User.ts
+│       └── AuditLog.ts
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+└── docs/
+    ├── architecture.md
+    ├── screenshots/
+    │   ├── editor.png
+    │   ├── testlab.png
+    │   └── scoring.png
+    └── contribution.md

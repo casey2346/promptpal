@@ -1,0 +1,234 @@
+{
+  "dir": "ltr",
+  "id": "/?homescreen",
+  "version": "1.0.1-alpha+build.2025.07",
+  "name": "PromptPal - AI Prompt Testing & Management",
+  "short_name": "PromptPal",
+  "_name_i18n": {
+    "en": "PromptPal - AI Prompt Testing & Management",
+    "zh": "PromptPal - AI 提示词测试与管理"
+  },
+  "description": "AI prompt engineering, testing, management, scoring, GPT, Claude, Gemini, LLM tools",
+  "_description_i18n": {
+    "en": "AI prompt engineering, testing, management, scoring, GPT, Claude, Gemini, LLM tools",
+    "zh": "AI prompt engineering, testing, management, scoring, GPT, Claude, Gemini, LLM tools in Chinese"
+  },
+  "keywords": [
+    "prompt engineering",
+    "AI",
+    "LLM",
+    "testing",
+    "management",
+    "GPT",
+    "Claude",
+    "Gemini",
+    "LLM tools"
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "fullscreen",
+    "browser"
+  ],
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "theme_color_dark": "#3E8E41",
+  "orientation": "any",
+  "scope": "/app/",
+  "lang": "en",
+  "iarc_rating_id": "Unrated",
+  "categories": [
+    "productivity",
+    "developer",
+    "utilities",
+    "education",
+    "business",
+    "tools",
+    "communication",
+    "design",
+    "reference",
+    "news"
+  ],
+  "developer": {
+    "name": "PromptPal Team",
+    "url": "https://yourwebsite.com",
+    "email": "support@yourwebsite.com",
+    "organization": "PromptPal Inc."
+  },
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "152x152",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "384x384",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg ... Mobile view ... %3E",
+      "sizes": "540x720 1080x1920",
+      "type": "image/svg+xml",
+      "platform": "mobile",
+      "label": "Mobile view of PromptPal"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg ... Desktop view ... %3E",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "platform": "wide",
+      "label": "Desktop view of PromptPal"
+    },
+    {
+      "src": "/screenshots/mobile-1080x1920.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "mobile",
+      "label": "Mobile Full HD view"
+    },
+    {
+      "src": "/screenshots/tablet-1536x2048.png",
+      "sizes": "1536x2048",
+      "type": "image/png",
+      "platform": "tablet",
+      "label": "Tablet view of PromptPal"
+    },
+    {
+      "src": "/screenshots/ipadpro-2048x2732.png",
+      "sizes": "2048x2732",
+      "type": "image/png",
+      "platform": "tablet",
+      "label": "iPad Pro view of PromptPal"
+    },
+    {
+      "src": "/screenshots/desktop-1920x1080.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Desktop Full HD view of PromptPal"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Prompt",
+      "short_name": "New",
+      "description": "Create a new prompt",
+      "url": "/?action=new",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+          "sizes": "192x192 512x512",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Test Lab",
+      "short_name": "Test",
+      "description": "Open the test lab",
+      "url": "/?tab=test",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg ... 🧠 ... %3E",
+          "sizes": "192x192 512x512",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "description": "Adjust application preferences",
+      "url": "/?tab=settings",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg ... %3E",
+          "sizes": "192x192 512x512",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.promptpal",
+      "id": "com.example.promptpal"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/your-app-id",
+      "id": "your.app.id"
+    },
+    {
+      "platform": "webapp",
+      "url": "https://yourwebsite.com"
+    }
+  ],
+  "prefer_related_applications": true,
+  "protocol_handlers": [
+    {
+      "protocol": "web+promptpal",
+      "url": "/?link=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link"
+    }
+  },
+  "serviceworker": {
+    "src": "/service-worker.js",
+    "scope": "/",
+    "use_cache": true
+  }
+}
