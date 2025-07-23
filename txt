@@ -44,7 +44,7 @@ promptpal/
 │       └── main.css
 ├── static/
 │   └── sw.js
-├── server/ (可选后端)
+├── server/ 
 │   ├── index.ts
 │   ├── routes/
 │   │   ├── auth.ts

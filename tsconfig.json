@@ -1,0 +1,57 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2021", "DOM"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["server/routes/*"],
+      "@services/*": ["src/services/*"],
+      "@scoring/*": ["src/scoring/*"],
+      "@charts/*": ["src/charts/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+    "outDir": "dist",
+    "rootDir": ".",
+    "removeComments": true,
+    "declaration": true,
+    "sourceMap": true,
+    "types": ["node", "jest"],
+    "incremental": true,
+    "skipLibCheck": true,
+    "composite": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  },
+  "include": [
+    "server/**/*",
+    "src/**/*",
+    "ui/**/*",
+    "scripts/**/*",
+    "tests/**/*",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

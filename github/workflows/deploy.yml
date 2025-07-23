@@ -1,0 +1,185 @@
+name: Deploy to Staging and Production
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  deploy:
+    name: Deploy Backend + Frontend
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [staging, production]
+    env:
+      NODE_ENV: ${{ matrix.environment }}
+      DOCKER_BUILDKIT: 1
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Backend Dependencies
+        run: cd server && npm ci
+
+      - name: Install Frontend Dependencies
+        run: cd client && npm ci
+
+      - name: Lint Backend
+        run: cd server && npm run lint > backend-lint.txt || true
+
+      - name: Lint Frontend
+        run: cd client && npm run lint > frontend-lint.txt || true
+
+      - name: Upload Lint Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports-${{ matrix.environment }}
+          path: |
+            backend-lint.txt
+            frontend-lint.txt
+
+      - name: Test Backend
+        run: cd server && npm run test -- --coverage
+
+      - name: Test Frontend
+        run: cd client && npm run test -- --coverage
+
+      - name: Upload Code Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run E2E Tests
+        run: npm run e2e:test
+
+      - name: Run Semgrep Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: 'auto'
+
+      - name: Run SonarCloud Scan (optional)
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+
+      - name: Build Frontend
+        run: cd client && npm run build
+
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build-${{ matrix.environment }}
+          path: client/.next
+
+      - name: Validate .env.${{ matrix.environment }} Exists
+        run: |
+          test -f server/.env.${{ matrix.environment }} || (echo ".env.${{ matrix.environment }} not found" && exit 1)
+
+      - name: Build Docker Image
+        run: docker build -t my-ai-app:${{ matrix.environment }} .
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: my-ai-app:${{ matrix.environment }}
+
+      - name: Push Docker Image to DockerHub
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker tag my-ai-app:${{ matrix.environment }} ${{ secrets.DOCKER_USERNAME }}/my-ai-app:${{ matrix.environment }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-ai-app:${{ matrix.environment }}
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/my-ai-app-${{ matrix.environment }}
+            git pull origin ${{ github.ref_name }}
+            docker compose -f docker-compose.${{ matrix.environment }}.yml down
+            docker compose -f docker-compose.${{ matrix.environment }}.yml up -d --build
+
+      - name: Health Check
+        run: |
+          curl -f http://${{ secrets.HEALTHCHECK_HOST }}/${{ matrix.environment }}/api/health || exit 1
+
+      - name: Notify on Failure via Email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "⚠️ Deployment Failed - ${{ matrix.environment }}"
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: GitHub Actions <${{ secrets.MAIL_USERNAME }}>
+          body: |
+            Deployment failed on ${{ github.repository }} @ ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            Job: ${{ github.job }}
+
+      - name: Notify Slack on Success
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "✅ Deployment successful for *${{ github.repository }}* to `${{ matrix.environment }}`"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Validate Required Secrets
+        run: |
+          for var in SSH_HOST SSH_USER SSH_KEY HEALTHCHECK_HOST DOCKER_USERNAME DOCKER_PASSWORD MAIL_USERNAME MAIL_PASSWORD ALERT_EMAIL SLACK_WEBHOOK_URL; do
+            if [ -z "${{ secrets[${var}] }}" ]; then
+              echo "❌ Missing secret: $var" && exit 1
+            fi
+          done
+
+      - name: Upload Build to GitHub Release (Optional)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.sha }}
+          files: client/.next/**
+
+      - name: Notify Sentry (Optional)
+        if: success()
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          export SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-cli releases new -p my-ai-app-${{ matrix.environment }} ${{ github.sha }}
+          sentry-cli releases set-commits --auto ${{ github.sha }}
+          sentry-cli releases finalize ${{ github.sha }}
+
+      - name: Tag Version Automatically (Optional)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v1.0.${{ github.run_number }}
+          git push origin v1.0.${{ github.run_number }}
